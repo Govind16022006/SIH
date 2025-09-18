@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Animated Quizzes & Mock Tests</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>📝 Quizzes & Mock Tests</h1>
+
+    <input type="text" id="studentName" placeholder="Enter your name" required>
+    <div id="timer-container">
+      <div id="timer">10:00</div>
+      <div id="progress-bar">
+        <div id="progress"></div>
+      </div>
+    </div>
+    <div id="quiz-container">
+      <!-- Quiz questions will be dynamically added here -->
+    </div>
+
+    <button id="next-btn">Start Quiz</button>
+    <button id="skip-btn">Skip Question</button>
+    <button id="back-btn">Back to Main Page</button>
+
+    <div id="result-container" class="hidden">
+      <h2>Your Score: <span id="score"></span>/<span id="total"></span></h2>
+      <button id="restart-btn">Restart Quiz</button>
+    </div>
+  </div>
+
+  <!-- Confetti canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>

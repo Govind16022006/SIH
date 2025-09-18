@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Logged Out</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding-top: 50px;
+      overflow-x: hidden;
+      position: relative;
+    }
+    .message {
+      font-size: 2em;
+      margin-bottom: 30px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="message">You have logged out successfully.</div>
+  <button onclick="window.location.href='/login'">Login Again</button>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Progress Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Student Progress Tracker</h1>
+
+    <button id="back-btn">Back to Main Page</button>
+
+    <form id="progressForm">
+      <!-- Removed studentName and score inputs and Add Record button as per request -->
+    </form>
+    <div id="threeDPictureContainer" style="text-align:center; margin-top: 20px;">
+      <!-- Embedded 3D animated progress report -->
+      <iframe src="3d-progress-report.html" style="width: 400px; height: 400px; border: none; border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.3);" title="3D Progress Report"></iframe>
+    </div>
+
+    <table id="progressTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Score</th>
+          <th>Grade</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

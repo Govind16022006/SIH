@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D Animated Progress Report</title>
+  <style>
+    body {
+      margin: 0;
+      background: #1e1e2f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+    }
+    #container {
+      width: 400px;
+      height: 400px;
+      perspective: 1000px;
+    }
+    #cube {
+      width: 400px;
+      height: 400px;
+      position: relative;
+      margin: auto;
+      transform-style: preserve-3d;
+    }
+    .face {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: rgba(106, 17, 203, 0.8);
+      border: 2px solid #6a11cb;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #6a11cb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.4rem;
+      font-weight: 600;
+      text-align: center;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+    #front  { transform: translateZ(200px); }
+    #back   { transform: rotateY(180deg) translateZ(200px); }
+    #right  { transform: rotateY(90deg) translateZ(200px); }
+    #left   { transform: rotateY(-90deg) translateZ(200px); }
+    #top    { transform: rotateX(90deg) translateZ(200px); }
+    #bottom { transform: rotateX(-90deg) translateZ(200px); }
+    #animated-picture {
+      width: 400px;
+      height: 400px;
+      background: rgba(106, 17, 203, 0.8);
+      border: 2px solid #6a11cb;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #6a11cb;
+      animation: spin 5s linear infinite;
+      transform-style: preserve-3d;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.4rem;
+      font-weight: 600;
+      text-align: center;
+      color: white;
+    }
+    @keyframes spin {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <img id="animated-picture" src="https://img.freepik.com/premium-photo/books-library-with-old-books-3d-render-3d-illustration-aigenerated_569725-2836.jpg?w=2000" alt="3D Library Image" />
+  </div>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Chatbot with Talking Face</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding-top: 50px;
+      overflow-x: hidden;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+      animation: float 20s infinite linear;
+      z-index: -1;
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-100px); }
+    }
+    .ai-heading {
+      font-size: 3.5em;
+      margin-bottom: 30px;
+      background: linear-gradient(90deg, #00f2ff, #8e2de2, #ff6b6b);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: gradientWave 5s linear infinite;
+      display: inline-block;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+    .ai-heading span {
+      display: inline-block;
+      animation: bounceLetter 1.6s ease-in-out infinite;
+    }
+    .ai-heading span:nth-child(odd) {
+      animation-delay: 0.1s;
+    }
+    .ai-heading span:nth-child(even) {
+      animation-delay: 0.2s;
+    }
+    @keyframes gradientWave {
+      0% {
+        background-position: 0%;
+      }
+      100% {
+        background-position: 100%;
+      }
+    }
+    @keyframes bounceLetter {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    input, button {
+      padding: 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 25px;
+      margin: 10px;
+      transition: all 0.3s ease;
+    }
+    input {
+      width: 320px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 2px solid transparent;
+      animation: inputPulse 2.5s infinite ease-in-out;
+    }
+    input:focus {
+      border: 2px solid #00f2ff;
+      box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+      transform: scale(1.02);
+    }
+    input::placeholder {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(90deg, #ffffff 0%, #00f2ff 50%, #ffffff 100%);
+      background-size: 200% auto;
+      color: rgba(255, 255, 255, 0.7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3s linear infinite;
+    }
+    @keyframes inputPulse {
+      0% { box-shadow: 0 0 5px rgba(255,255,255,0.1); }
+      50% { box-shadow: 0 0 15px rgba(0,242,255,0.4); }
+      100% { box-shadow: 0 0 5px rgba(255,255,255,0.1); }
+    }
+    @keyframes shine {
+      0% { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    button {
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      color: white;
+      cursor: pointer;
+      animation: popButton 0.6s ease-out;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+    }
+    @keyframes popButton {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    #response {
+      margin-top: 20px;
+      font-size: 18px;
+      white-space: pre-wrap;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 0.5s forwards;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    video {
+      margin-top: 20px;
+      width: 320px;
+      display: none;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      animation: scaleIn 0.5s ease-out;
+    }
+    @keyframes scaleIn {
+      0% { transform: scale(0); }
+      100% { transform: scale(1); }
+    }
+    .glow-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #ff6b6b);
+      animation: glow 2s infinite;
+    }
+    @keyframes glow {
+      0% { box-shadow: 0 0 10px #ff6b6b; }
+      50% { box-shadow: 0 0 20px #4ecdc4; }
+      100% { box-shadow: 0 0 10px #ff6b6b; }
+    }
+    #lottie-container {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 100px;
+      height: 100px;
+    }
+    canvas#particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    .wave {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,60 C300,100 600,20 900,60 C1050,80 1200,40 1200,60 L1200,120 L0,120 Z" fill="rgba(255,255,255,0.1)"></path></svg>') no-repeat;
+      background-size: cover;
+      animation: waveMove 10s infinite linear;
+    }
+    @keyframes waveMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50px); }
+    }
+    .auth-buttons {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 0px;
+      z-index: 100;
+    }
+
+    .auth-buttons button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      background: linear-gradient(135deg, #43e97b, #38f9d7);
+      color: white;
+      box-shadow: 0 0 15px rgba(56, 249, 215, 0.6);
+      transition: all 0.3s ease-in-out;
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    .auth-buttons button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(56, 249, 215, 0.8);
+    }
+
+    .auth-buttons .signup-btn {
+      background: linear-gradient(135deg, #ff6b6b, #f94d6a);
+      box-shadow: 0 0 15px rgba(255, 107, 107, 0.6);
+    }
+
+    .auth-buttons .logout-btn {
+      background: linear-gradient(135deg, #ff4757, #ff3838);
+      box-shadow: 0 0 15px rgba(255, 71, 87, 0.6);
+    }
+
+    /* New styles for quizzes and progress blocks */
+    .info-section {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 40px;
+      perspective: 1000px;
+    }
+    .info-block {
+      display: flex;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 20px;
+      width: 100px;
+      height: 100px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      color: white;
+      font-weight: bold;
+      font-size: 0.9em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    justify-content: center;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      /* transition: transform 0.8s ease; */
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="auth-buttons" id="authButtons">
+    <button class="login-btn" onclick="handleLogin()">Login</button>
+    <button class="signup-btn" onclick="handleSignup()">Sign Up</button>
+    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+  </div>
+  <div id="loggedOutMessage" style="display:none; margin-top: 20px; font-size: 18px; color: white;">
+    You have logged out successfully.
+  </div>
+
+  <h1 class="ai-heading">
+    <span>A</span><span>s</span><span>k</span>
+    <span>M</span><span>e</span>
+    <span>A</span><span>n</span><span>y</span><span>t</span><span>h</span><span>i</span><span>n</span><span>g</span> 🤖
+  </h1>
+
+  <input type="text" id="question" placeholder="Type your question..." size="50">
+  <button onclick="askQuestion()">Ask</button>
+
+  <div id="response"></div>
+  <video id="botVideo" controls autoplay></video>
+
+  <div id="lottie-container"></div>
+  <canvas id="particles"></canvas>
+  <div class="wave"></div>
+  <!-- <div class="glow-bar"></div> -->
+
+  <div class="info-section"> 
+    <div class="info-block" onclick="location.href='quizzes-mock-tests/quizes.html'">
+      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828919.png" alt="Quizzes Icon" style="width:100px; height:100px;" />
+      Quizzes
+    </div>
+    <div class="info-block" onclick="location.href='student-progress-tracker/Studenttacker.html'">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Progress Icon" style="width:100px; height:100px;" />
+      Progress Report
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    // GSAP animation for h1
+    gsap.from("h1", { duration: 1, y: -50, opacity: 0, ease: "power2.out" });
+
+    // Animate login & signup buttons using GSAP
+    gsap.to(".auth-buttons button", {
+      y: 0,
+      opacity: 1,
+      duration: 1,
+      stagger: 0.2,
+      ease: "back.out(1.7)"
+    });
+
+    // Animate info blocks
+    gsap.from(".info-block", {
+      duration: 1,
+      y: 50,
+      opacity: 0,
+      stagger: 0.3,
+      ease: "power3.out"
+    });
+
+    // Lottie animation
+    lottie.loadAnimation({
+      container: document.getElementById('lottie-container'),
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'https://assets.lottiefiles.com/animated_illustrations/lf30_editor_3rz6kgvk.json' // Example robot animation
+    });
+
+    // Particles
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const particles = [];
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 2,
+        vy: (Math.random() - 0.5) * 2,
+        size: Math.random() * 3 + 1
+      });
+    }
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fill();
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    // Typewriter effect
+    function typeWriter(text, element, speed = 50) {
+      let i = 0;
+      element.textContent = '';
+      element.style.opacity = 1;
+      function type() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
+    async function askQuestion() {
+      const question = document.getElementById('question').value;
+      const responseDiv = document.getElementById('response');
+      const botVideo = document.getElementById('botVideo');
+
+      if (!question.trim()) {
+        responseDiv.textContent = "Please enter a question.";
+        return;
+      }
+
+      responseDiv.textContent = "Thinking...";
+      botVideo.style.display = "none";
+
+      try {
+        const res = await fetch('/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question })
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          responseDiv.textContent = "Error: " + data.details;
+          return;
+        }
+
+        typeWriter(data.answer, responseDiv);
+        botVideo.src = data.video_url;
+        botVideo.style.display = "block";
+        botVideo.play();
+      } catch (error) {
+        responseDiv.textContent = "Error contacting server.";
+      }
+    }
+
+    function handleLogin() {
+      window.location.href = "login.html";
+    }
+
+    function handleSignup() {
+      window.location.href = "signup.html";
+    }
+
+    function handleLogout() {
+      window.location.href = "/logout";
+      // After logout, hide logout button and show logged out message
+      document.getElementById('authButtons').style.display = 'none';
+      document.getElementById('loggedOutMessage').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
